@@ -1,0 +1,8 @@
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\bin\Debug\E705Proxy.exe
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\bin\Debug\E705Proxy.pdb
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.csprojResolveAssemblyReference.cache
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.Form1.resources
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.Properties.Resources.resources
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.csproj.GenerateResource.Cache
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.exe
+C:\Users\XUHAI\Documents\Visual Studio 2013\Projects\E705Proxy\E705Proxy\obj\Debug\E705Proxy.pdb
