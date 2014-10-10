@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace E705Proxy
 {
-    class Proxy
+    class Proxy : IProxy
     {
-        public int Port { get; private set; }
+        public int Port { get; protected set; }
         public int Connections { get { return connectionClients == null ? 0 : connectionClients.Count; } }
         private object connectionsLock;
         private List<TcpClient> connectionClients;
@@ -99,7 +99,7 @@ namespace E705Proxy
                     });
                 int bytesRead = browserConnection.GetStream().Read(buffer, 0, buffer.Length);
 
-                serverConnection = parseServer(Encoding.Default.GetString(buffer, 0, bytesRead));
+                serverConnection = ServerParser.Parse(Encoding.Default.GetString(buffer, 0, bytesRead));
                 if (serverConnection == null)
                 {
                     browserConnection.Close();
@@ -143,59 +143,6 @@ namespace E705Proxy
                         BytesTrans += bytecount;
                 });
             }
-        }
-        static TcpClient parseServer(string reqHeader)
-        {
-            string Method, Path;
-            string Host = null;
-            int Port = 80;
-            string[] arrHeaders = reqHeader.Split(new char[] { '\r', '\n' }, 20, StringSplitOptions.RemoveEmptyEntries);
-            if (arrHeaders.Length < 1)
-                return null;
-
-            Method = arrHeaders[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
-            Path = arrHeaders[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
-            // Get Host from "host: xxx.com"
-            for (int i = 1; i < arrHeaders.Length; i++)
-            {
-                string strTemp = arrHeaders[i].Trim();
-                if (strTemp.StartsWith(":"))
-                    strTemp = strTemp.Substring(1).Trim();
-                if (strTemp.StartsWith("host", true, null))
-                {
-                    Host = strTemp.Substring(5).Trim();
-                    break;
-                }
-            }
-            // The case starting an SSL tunnel
-            if (Method.StartsWith("CONNECT", true, null)) Port = 443;
-            // Handle the header without "host: xxx.com"
-            if (string.IsNullOrEmpty(Host) && Path.Length >= 10)
-            {
-                if (Path.IndexOf(@"://") > -1) // has protocol
-                {
-                    string protocol = Path.Split(':')[0];
-                    Host = Path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries)[1];
-                    //if (protocol.StartsWith("https", true, null)) Port = 443;
-                    //if (protocol.StartsWith("ftp", true, null)) Port = 21;
-                }
-                else
-                    Host = Path.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries)[0];
-            }
-            // Handle the case with specified port number
-            int iTemp = Host.LastIndexOf(":");
-            if (iTemp > -1)
-            {
-                Port = int.Parse(Host.Substring(iTemp + 1));
-                Host = Host.Substring(0, iTemp);
-            }
-            // Host & Port are ready, return TcpClient to server
-            TcpClient server = null;
-            try
-            { server = new TcpClient(Host, Port); }
-            //{ server = new TcpClient("127.0.0.1", 8087); }
-            catch { }
-            return server;
         }
     }
 }

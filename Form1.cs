@@ -18,9 +18,9 @@ namespace E705Proxy
         private void Form1_Shown(object sender, EventArgs e)
         {
             notifyInit();
-            proxys = new Proxy[]{
-                new Proxy(13000),
-                new Proxy(515)
+            proxys = new IProxy[]{
+                new Proxy2(13000),
+                new Proxy2(515)
             };
         }
 
@@ -75,7 +75,7 @@ namespace E705Proxy
 
 
 
-        private Proxy[] proxys;
+        private IProxy[] proxys;
         private long[] lastBytesTrans;
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -97,9 +97,14 @@ namespace E705Proxy
             StringBuilder sb = new StringBuilder("端口号 连接数   即时速度 总数据量");
             for(int i = 0; i < proxys.Length; i++)
             {
+                int connections;
+                if (proxys[i] is Proxy)
+                    connections = (proxys[i] as Proxy).Connections;
+                else
+                    connections = (proxys[i] as Proxy2).Connections.Count;
                 sb.AppendFormat("\n{0,6} {1,6} {2,8}/s {3,8}",
                     proxys[i].Port,
-                    proxys[i].Connections,
+                    connections,
                     byte2String((long)((proxys[i].BytesTrans - lastBytesTrans[i]) * 1000.0 / timer1.Interval)),
                     byte2String(proxys[i].BytesTrans));
                 lastBytesTrans[i] = proxys[i].BytesTrans;
